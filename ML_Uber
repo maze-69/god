@@ -177,7 +177,7 @@ RMSE = np.sqrt(MSE)
 
 RMSE
 
-9. Random Forest 
+10. Random Forest 
 
 from sklearn.ensemble import RandomForestRegressor
 rf = RandomForestRegressor(n_estimators=50) #Here n_estimators means number of trees you want to build before making the prediction
