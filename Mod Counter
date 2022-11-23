@@ -1,0 +1,40 @@
+ library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_unsigned.ALL;
+entity modcounter is
+    Port ( CLK : in  STD_LOGIC;
+           RST : in  STD_LOGIC;
+           Q : out  STD_LOGIC_VECTOR (3 downto 0));
+end modcounter;
+
+architecture Behavioral of modcounter is
+signal temp: std_logic_vector(3 downto 0);
+signal slow_clk:std_logic;
+signal clk_div:std_logic_vector(28 downto 0);
+begin
+---------------------------This process is to get low clock frequency------------------------------------
+	process(CLK)
+		begin
+			if rising_edge(CLK) then clk_div<=clk_div+1;
+			end if;
+	end process;
+	slow_clk<=clk_div(26);
+--------------------------------------------------main code-----------------------------------------------------------
+
+
+	process(slow_clk)
+	begin
+		if slow_clk'event and slow_clk = '1' then
+			if RST= '1' then
+			temp<=(others=>'0');
+			else
+				if temp="1001" then
+					temp<=(others=>'0');
+				else
+					temp<=temp+1;
+				end if;
+			end if;
+		end if;
+   end process;
+Q<= temp;
+end Behavioral;
