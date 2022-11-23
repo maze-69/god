@@ -1,0 +1,39 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_ARITH.ALL;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
+entity ALU is
+    Port ( A : in std_logic_vector(3 downto 0);
+           B : in std_logic_vector(3 downto 0);
+           opcode : in std_logic_vector(2 downto 0);
+           cin : in std_logic;
+           Y : out std_logic_vector(3 downto 0);
+           cout : out std_logic);
+end ALU;
+
+
+architecture Behavioral of ALU is
+	signal c1,c2,c3:std_logic;
+begin
+		  
+	 with opcode select
+	 	Y <= A when "000",
+	        A + B + cin when "001",
+	        A-B when "010",
+	        A or B when "011",
+           A xor B when "100",
+			  A xnor B when "101",
+			  A and B when "110",
+	     	  A nand B when "111",
+	      	(others=>'Z') when others;
+
+	   c1<= (A(0) and B(0)) or (A(0) and cin) or (B(0) and cin);
+	   c2<= (A(1) and B(1)) or (A(1) and c1) or (B(1) and c1);
+		c3<= (A(2) and B(2)) or (A(2) and c2) or (B(2) and c2);
+
+	with opcode select
+		 cout<= (A(3) and B(3)) or (A(3) and c3 ) or (B(3) and c3) when "001",
+		 not((A(3) and B(3)) or (A(3) and c3 ) or (B(3) and c3)) when "010",
+		        'Z' when others;
+
+end Behavioral;
